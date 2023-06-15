@@ -3,8 +3,10 @@ import requests
 from fastapi import FastAPI, Request, status
 from fastapi.responses import JSONResponse
 from Mongo import MongoParser
+import sys
 
 app = FastAPI()
+sys.setrecursionlimit(2000)
 
 
 def parse_spu(spu):
@@ -18,7 +20,7 @@ def parse_spu(spu):
     return re.sub(r'\D', '', spu)
 
 
-def get_product(spu):
+async def parse_product(spu):
     mongo_parser = MongoParser(
         'mongodb+srv://dewu_admin:8I7mp77hxuIXMgG9@cluster0.hugo46h.mongodb.net/?retryWrites=true&w=majority')
     mongo_parser.set_database('dewu_shop')
@@ -26,15 +28,16 @@ def get_product(spu):
 
     spu = parse_spu(spu)
     parsed = list(mongo_parser.collection.find({"detail.spuId": spu}))
+    print(parsed)
     if not parsed:
         result = mongo_parser.add_item(spu)
         if not result:
             return {"error": "incorrect spuId"}
-        return get_product(spu)
+        return await parse_product(spu)
     parsed[0].pop('_id')
-    return parsed[0]
+    return {}
 
 
 @app.get("/get_product/{spu}")
 async def get_product(spu: str):
-    return get_product(spu)
+    return await parse_product(spu)
