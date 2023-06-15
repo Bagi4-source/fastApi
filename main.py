@@ -37,19 +37,12 @@ def get_product(spu):
     return parsed[0]
 
 
-@app.get("/")
-async def root(request: Request):
+@app.get("/get_product/{spu}")
+async def get_product(spu: str, request: Request):
     ip = str(request.client.host)
     if ip not in WHITELISTED_IPS:
         data = {
             'message': f'IP {ip} is not allowed to access this resource.'
         }
         return JSONResponse(status_code=status.HTTP_400_BAD_REQUEST, content=data)
-
-    # Proceed if IP is allowed
-    return {"message": "Hello World"}
-
-
-@app.get("/get_product/{spu}")
-async def say_hello(spu: str):
     return get_product(spu)
