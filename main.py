@@ -2,7 +2,7 @@ import re
 from typing import List
 
 import requests
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, HTTPException
 from pydantic import BaseModel
 from starlette.responses import RedirectResponse
 
@@ -32,7 +32,7 @@ async def parse_product(spu):
 
     new_spu = parse_spu(spu)
     if not new_spu:
-        return {"error": "spuId is empty"}
+        raise HTTPException(status_code=403, detail="Incorrect data")
 
     # if spu != new_spu:
     #     return RedirectResponse(f'/get_product/?spu={new_spu}')
@@ -41,7 +41,7 @@ async def parse_product(spu):
     if not parsed:
         result = mongo_parser.add_item(new_spu)
         if not result:
-            return {"error": "incorrect spuId"}
+            raise HTTPException(status_code=404, detail="Product not found")
     parsed[0].pop('_id')
     return parsed[0]
 
@@ -94,10 +94,23 @@ class Variant(BaseModel):
 class Product(BaseModel):
     detail: Detail
     images: List[str]
-    sizeInfo: List[Size]
-    variants: List[Variant]
+    sizeInfo: List[Size] | None
+    variants: List[Variant] | None
 
 
-@app.get("/get_product/", response_model=Product)
+class Message(BaseModel):
+    detail: str | None
+
+
+@app.get("/get_product/", response_model=Product,
+         responses={
+             404: {
+                 "model": Message,
+                 "description": "The product was not found"
+             },
+             200: {
+                 "description": "Product requested by spuId",
+             }
+         })
 async def get_product(spu: str):
     return await parse_product(spu)
