@@ -6,8 +6,6 @@ from Mongo import MongoParser
 
 app = FastAPI()
 
-WHITELISTED_IPS = ['194.58.109.219', '127.0.0.1', '172.19.0.1']
-
 
 def parse_spu(spu):
     if 'https://dw4.co/t' in spu:
@@ -38,11 +36,5 @@ def get_product(spu):
 
 
 @app.get("/get_product/{spu}")
-async def get_product(spu: str, request: Request):
-    ip = str(request.client.host)
-    if ip not in WHITELISTED_IPS:
-        data = {
-            'message': f'IP {ip} is not allowed to access this resource.'
-        }
-        return JSONResponse(status_code=status.HTTP_400_BAD_REQUEST, content=data)
+async def get_product(spu: str):
     return get_product(spu)
