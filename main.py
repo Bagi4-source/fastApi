@@ -40,6 +40,6 @@ async def parse_product(spu):
     return parsed[0]
 
 
-@app.get("/get_product/{spu}")
+@app.get("/get_product/")
 async def get_product(spu: str):
     return await parse_product(spu)
