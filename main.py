@@ -1,13 +1,15 @@
+import logging
+
 from fastapi import FastAPI, Request, status
 from fastapi.responses import JSONResponse
 
 app = FastAPI()
 
-WHITELISTED_IPS = ['194.58.109.219']
+WHITELISTED_IPS = ['194.58.109.219', '127.0.0.1']
 
 
 @app.get("/")
-async def root(request: Request, call_next):
+async def root(request: Request):
     ip = str(request.client.host)
     if ip not in WHITELISTED_IPS:
         data = {
