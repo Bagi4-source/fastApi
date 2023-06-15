@@ -37,7 +37,7 @@ async def parse_product(spu):
             return {"error": "incorrect spuId"}
         return await parse_product(spu)
     parsed[0].pop('_id')
-    return {}
+    return parsed[0]
 
 
 @app.get("/get_product/{spu}")
