@@ -27,8 +27,10 @@ async def parse_product(spu):
     mongo_parser.set_collection('products')
 
     spu = parse_spu(spu)
-    parsed = list(mongo_parser.collection.find({"detail.spuId": spu}))
-    print(parsed)
+    if not spu:
+        return {"error": "spuId is empty"}
+
+    parsed = list(mongo_parser.collection.find({"detail.spuId": int(spu)}))
     if not parsed:
         result = mongo_parser.add_item(spu)
         if not result:
