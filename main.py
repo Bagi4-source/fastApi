@@ -5,7 +5,7 @@ from fastapi.responses import JSONResponse
 
 app = FastAPI()
 
-WHITELISTED_IPS = ['194.58.109.219', '127.0.0.1']
+WHITELISTED_IPS = ['194.58.109.219', '127.0.0.1', '172.19.0.1']
 
 
 @app.get("/")
