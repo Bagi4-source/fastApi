@@ -1,10 +1,21 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request, status
+from fastapi.responses import JSONResponse
 
 app = FastAPI()
 
+WHITELISTED_IPS = ['194.58.109.219']
+
 
 @app.get("/")
-async def root():
+async def root(request: Request, call_next):
+    ip = str(request.client.host)
+    if ip not in WHITELISTED_IPS:
+        data = {
+            'message': f'IP {ip} is not allowed to access this resource.'
+        }
+        return JSONResponse(status_code=status.HTTP_400_BAD_REQUEST, content=data)
+
+    # Proceed if IP is allowed
     return {"message": "Hello World"}
 
 
