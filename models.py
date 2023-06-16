@@ -58,13 +58,21 @@ class Message(BaseModel):
     detail: str
 
 
-class Translation(BaseModel):
+class TranslationMixin(BaseModel):
     from_code: str
     to_code: str
+
+
+class Translation(TranslationMixin):
     translation: str
 
 
-class TranslationPackages(BaseModel):
+class TranslationRequest(TranslationMixin):
+    text: str
+
+
+class TranslationPackages(TranslationMixin):
     dir: str
-    from_code: str
-    to_code: str
+
+    def __str__(self):
+        return self.dir

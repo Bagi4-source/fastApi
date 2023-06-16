@@ -1,7 +1,7 @@
 import logging
 import requests
 from pydantic import BaseModel
-from models import Translation
+from models import Translation, TranslationPackages
 
 
 class Translator:
@@ -15,7 +15,7 @@ class Translator:
 
     @staticmethod
     def get_codes():
-        return []
+        return [TranslationPackages(dir='English -> Russian', to_code='ru', from_code='en')]
 
     def translate(self, text, from_code='en', to_code='ru'):
         self.text = text
