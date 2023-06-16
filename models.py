@@ -65,6 +65,6 @@ class Translation(BaseModel):
 
 
 class TranslationPackages(BaseModel):
-    package: str
+    dir: str
     from_code: str
     to_code: str

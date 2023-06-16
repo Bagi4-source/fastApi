@@ -1,12 +1,7 @@
 import logging
 import requests
 from pydantic import BaseModel
-
-
-class Translation(BaseModel):
-    from_code: str
-    to_code: str
-    translation: str
+from models import Translation
 
 
 class Translator:

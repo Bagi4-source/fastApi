@@ -42,7 +42,7 @@ async def translate(text: str, from_code: str, to_code: str):
 async def get_translation_codes():
     return [
         {
-            'package': x,
+            'dir': x,
             'from_code': x.from_code,
             'to_code': x.to_code
         } for x in Translator.get_codes()
