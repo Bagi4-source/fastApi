@@ -3,6 +3,8 @@ import requests
 from fastapi import FastAPI, Request, HTTPException
 from Mongo import MongoParser
 from models import Product, Message
+from tools import AP, install
+import argostranslate.translate
 
 app = FastAPI()
 
@@ -52,3 +54,28 @@ async def parse_product(spu):
          })
 async def get_product(spu: str):
     return await parse_product(spu)
+
+
+@app.post("/translate")
+async def translate(text: str, from_code: str, to_code: str):
+    if not install(from_code, to_code):
+        return {}
+
+    translated = argostranslate.translate.translate(text, from_code, to_code)
+
+    return {
+        "from_code": from_code,
+        "to_code": to_code,
+        "translatedText": translated
+    }
+
+
+@app.get("/translate/get_codes")
+async def get_translation_codes():
+    return [
+        {
+            'package': x,
+            'from_code': x.from_code,
+            'to_code': x.to_code
+        } for x in AP
+    ]
