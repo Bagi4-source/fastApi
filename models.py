@@ -50,12 +50,12 @@ class Variant(BaseModel):
 class Product(BaseModel):
     detail: Detail
     images: List[str]
-    sizeInfo: List[Size]
-    variants: List[Variant]
+    sizeInfo: List[Size] | None
+    variants: List[Variant] | None
 
 
 class Message(BaseModel):
-    detail: str
+    detail: str | None
 
 
 class TranslationMixin(BaseModel):
