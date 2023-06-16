@@ -1,16 +1,10 @@
 import re
-from typing import List
-
 import requests
 from fastapi import FastAPI, Request, HTTPException
-from pydantic import BaseModel
-from starlette.responses import RedirectResponse
-
 from Mongo import MongoParser
-import sys
+from models import Product, Message
 
 app = FastAPI()
-sys.setrecursionlimit(2000)
 
 
 def parse_spu(spu):
@@ -44,62 +38,6 @@ async def parse_product(spu):
             raise HTTPException(status_code=404, detail="Product not found")
     parsed[0].pop('_id')
     return parsed[0]
-
-
-class Brand(BaseModel):
-    brandId: int
-    brandName: str
-
-
-class Detail(BaseModel):
-    spuId: int
-    categoryId: int
-    brandId: int
-    authPrice: int
-    logoUrl: str
-    title: str
-    subTitle: str
-    desc: str
-    sourceName: str
-    articleNumber: str
-    articleNumbers: list
-    sellDate: str
-    fitId: int
-    brandLogoUrl: str
-    brandList: List[Brand]
-    STORY: str
-    INTRODUCTION: str
-    SHOW: str
-    DETAIL: str
-    properties: dict
-
-
-class Size(BaseModel):
-    sizeKey: str
-    sizeValue: str
-
-
-class Variant(BaseModel):
-    propertyId: int
-    name: str
-    value: str
-    propertyValueId: int
-    level: int
-    customValue: str
-    sort: int
-    definitionId: int
-    skuId: int
-
-
-class Product(BaseModel):
-    detail: Detail
-    images: List[str]
-    sizeInfo: List[Size] | None
-    variants: List[Variant] | None
-
-
-class Message(BaseModel):
-    detail: str | None
 
 
 @app.get("/get_product/", response_model=Product,
