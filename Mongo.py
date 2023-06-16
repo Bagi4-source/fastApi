@@ -1,5 +1,4 @@
 import logging
-
 import certifi
 from pymongo import MongoClient
 import requests

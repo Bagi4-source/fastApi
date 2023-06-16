@@ -56,3 +56,15 @@ class Product(BaseModel):
 
 class Message(BaseModel):
     detail: str | None
+
+
+class Translation(BaseModel):
+    from_code: str
+    to_code: str
+    translation: str
+
+
+class TranslationPackages(BaseModel):
+    package: str
+    from_code: str
+    to_code: str
