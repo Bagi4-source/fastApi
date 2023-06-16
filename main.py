@@ -26,8 +26,8 @@ async def get_product(spu: str):
     }
 })
 async def translate(o: TranslationRequest):
-    if (o.from_code, o.to_code) not in [(x.from_code, x.to_code) for x in Translator.get_codes()]:
-        raise HTTPException(status_code=422, detail="Incorrect codes")
+    # if (o.from_code, o.to_code) not in [(x.from_code, x.to_code) for x in Translator.get_codes()]:
+    #     raise HTTPException(status_code=422, detail="Incorrect codes")
 
     translation = Translator().translate(o.text, o.from_code, o.to_code)
 
