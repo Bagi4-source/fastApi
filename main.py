@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Request, HTTPException
+from Translator import Translator
 from models import Product, Message, Translation, TranslationPackages
-from tools import AP, install, parse_product
-import argostranslate.translate
+from tools import parse_product
 
 app = FastAPI()
 
@@ -26,10 +26,10 @@ async def get_product(spu: str):
     }
 })
 async def translate(text: str, from_code: str, to_code: str):
-    if not install(from_code, to_code):
+    if (from_code, to_code) not in Translator.get_codes():
         raise HTTPException(status_code=422, detail="Incorrect codes")
 
-    translation = argostranslate.translate.translate(text, from_code, to_code)
+    translation = Translator().translate(text, from_code, to_code)
 
     return {
         "from_code": from_code,
@@ -45,5 +45,5 @@ async def get_translation_codes():
             'package': x,
             'from_code': x.from_code,
             'to_code': x.to_code
-        } for x in AP
+        } for x in Translator.get_codes()
     ]
