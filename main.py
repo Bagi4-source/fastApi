@@ -1,4 +1,5 @@
 from fastapi import FastAPI, Request, HTTPException
+from fastapi.responses import JSONResponse
 from Translator import Translator
 from models import Product, Message, Translation, TranslationPackages, TranslationRequest
 from tools import parse_product
@@ -17,7 +18,7 @@ app = FastAPI()
              }
          })
 async def get_product(spu: str):
-    return await parse_product(spu)
+    return JSONResponse(content=await parse_product(spu))
 
 
 @app.post("/translate", response_model=Translation, responses={
