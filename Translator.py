@@ -50,11 +50,11 @@ class Translator:
 
         json_data = {
             'format': 'text',
-            'from': 'zh',
-            'to': 'rus',
+            'from': self.from_code,
+            'to': self.to_code,
             'input': self.text,
             'options': {
-                'sentenceSplitter': True,
+                'sentenceSplitter': False,
                 'origin': 'translation.web',
                 'contextResults': True,
                 'languageDetection': True,
