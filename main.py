@@ -30,8 +30,10 @@ async def translate(o: TranslationRequest):
     #     raise HTTPException(status_code=422, detail="Incorrect codes")
 
     translation = Translator().translate(o.text, o.from_code, o.to_code)
-
-    return translation
+    if translation:
+        return translation
+    else:
+        raise HTTPException(status_code=404, detail="Error")
 
 
 @app.get("/translate/get_codes", response_model=TranslationPackages)
