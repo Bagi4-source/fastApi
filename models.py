@@ -76,3 +76,15 @@ class TranslationPackages(TranslationMixin):
 
     def __str__(self):
         return self.dir
+
+
+class ClipResponse(BaseModel):
+    labels: list
+    descriptions: list
+
+
+class ClipResult(BaseModel):
+    similarity: dict
+    result: list
+    compares: dict
+    labels: list

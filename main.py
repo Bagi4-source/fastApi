@@ -1,8 +1,9 @@
 from fastapi import FastAPI, Request, HTTPException
 from fastapi.responses import JSONResponse
 from Translator import Translator
-from models import Product, Message, Translation, TranslationPackages, TranslationRequest
+from models import Product, Message, Translation, TranslationPackages, TranslationRequest, ClipResponse, ClipResult
 from tools import parse_product
+from CLIP import compare
 
 app = FastAPI()
 
@@ -46,3 +47,18 @@ async def get_translation_codes():
             'to_code': x.to_code
         } for x in Translator.get_codes()
     ]
+
+
+@app.post("/clip-compare", response_model=ClipResult)
+async def clip_compare(o: ClipResponse):
+    try:
+        result = compare(o.labels, o.descriptions)
+        result = {
+            "labels": result.labels,
+            "result": result.result,
+            "similarity": result.similarity,
+            "compares": result.compares
+        }
+        return result
+    except Exception as e:
+        raise HTTPException(status_code=502, detail=f"Error: {e}")
